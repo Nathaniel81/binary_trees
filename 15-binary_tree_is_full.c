@@ -1,35 +1,28 @@
 #include "binary_trees.h"
 
 /**
- * is_full_recursive - Checks if a binary tree is full recursively.
- * @tree: A pointer to the root node of the tree to check.
+ * binary_tree_is_full - checks if a binary tree is full
+ * @tree: the root node of the binary tree
  *
- * Return: If tree is not full, 0.
- *         Otherwise, 1.
- */
-int is_full_recursive(const binary_tree_t *tree)
-{
-	if (tree != NULL)
-	{
-		if ((tree->left != NULL && tree->right == NULL) ||
-		    (tree->left == NULL && tree->right != NULL) ||
-		    is_full_recursive(tree->left) == 0 ||
-		    is_full_recursive(tree->right) == 0)
-			return (0);
-	}
-	return (1);
-}
-
-/**
- * binary_tree_is_full - Checks if a binary tree is full.
- * @tree: A pointer to the root node of the tree to check.
- *
- * Return: If tree is NULL or is not full - 0.
- *         Otherwise - 1.
+ * Return: 1 if it is full, otherwise 0
  */
 int binary_tree_is_full(const binary_tree_t *tree)
 {
+	int l_full, r_full, has_l, has_r;
+
 	if (tree == NULL)
 		return (0);
-	return (is_full_recursive(tree));
+
+	if (tree->left == NULL && tree->right == NULL)
+		return (1);
+
+	has_l = tree->left != NULL ? 1 : 0;
+	has_r = tree->right != NULL ? 1 : 0;
+	if (has_l != has_r)
+		return (0);
+
+	l_full = binary_tree_is_full(tree->left);
+	r_full = binary_tree_is_full(tree->right);
+
+	return (l_full + r_full == 2 ? 1 : 0);
 }
