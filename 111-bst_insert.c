@@ -1,44 +1,49 @@
 #include "binary_trees.h"
-
 /**
- * bst_insert - insert a node to bst tree
- *
- * @tree: the root node of  the bst tree
- * @value: value to be added
- * Return: pointer to the root node
+ * bst_insert - insert nodes in order to create a BST tree
+ * @tree: tree to create with type BST
+ * @value: value of node to insert
+ * Return: BST tree
  */
 bst_t *bst_insert(bst_t **tree, int value)
 {
-	bst_t *node = NULL;
+	bst_t *new, *temp;
+	binary_tree_t *aux;
+
+	if (tree == NULL)
+		return (NULL);
 
 	if (*tree == NULL)
 	{
-		*tree = binary_tree_node(NULL, value);
-		return (*tree);
-	}
-
-	if (value == (*tree)->n)
-		return (node);
-
-	if (value < (*tree)->n)
-	{
-		if ((*tree)->left == NULL)
-		{
-			node = binary_tree_node(*tree, value);
-			(*tree)->left = node;
-		}
-		else
-			node = bst_insert(&((*tree)->left), value);
+		aux = binary_tree_node((binary_tree_t *)(*tree), value);
+		new = (bst_t *)aux;
+		*tree = new;
 	}
 	else
 	{
-		if ((*tree)->right == NULL)
+		temp = *tree;
+		if (value < temp->n)
 		{
-			node = binary_tree_node(*tree, value);
-			(*tree)->right = node;
+			if (temp->left)
+				new = bst_insert(&temp->left, value);
+			else
+			{
+				aux = binary_tree_node((binary_tree_t *)temp, value);
+				new = temp->left = (bst_t *)aux;
+			}
+		}
+		else if (value > temp->n)
+		{
+			if (temp->right)
+				new = bst_insert(&temp->right, value);
+			else
+			{
+				aux = binary_tree_node((binary_tree_t *)temp, value);
+				new = temp->right = aux;
+			}
 		}
 		else
-			node = bst_insert(&((*tree)->right), value);
+			return (NULL);
 	}
-	return (node);
+	return (new);
 }
